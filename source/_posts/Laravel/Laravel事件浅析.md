@@ -1,26 +1,27 @@
 ---
-title: Laravel/Laravel事件浅析
+title: Laravel事件浅析
 date: 2021-03-15 10:49:38
-tags: Laravel,PHP
+tags: Laravel PHP
 categories: Laravel
 ---
-## Laravel事件源码浅析
+
+## Laravel 事件源码浅析
 
 ### 一.前言
 
 需要了解以下基础知识：
 
-+ Laravel事件系统：https://learnku.com/docs/laravel/5.5/events/1318
-+ Facades：https://learnku.com/docs/laravel/5.5/facades/1291
-+ 服务提供者：https://learnku.com/docs/laravel/5.5/providers/1290
+- Laravel 事件系统：https://learnku.com/docs/laravel/5.5/events/1318
+- Facades：https://learnku.com/docs/laravel/5.5/facades/1291
+- 服务提供者：https://learnku.com/docs/laravel/5.5/providers/1290
 
 ### 二. 监听者注册和事件触发方式
 
 #### 注册监听
 
-1. 在`App\Providers\EventServiceProvider` 的 `$listen`  数组中增加事件类和监听者类的映射。
-2. 在`App\Providers\EventServiceProvider` 的 `boot()` 方法中设置基于字符串（事件名）和闭包（监听方法）的监听。 
-3. 在自定义的订阅者中可以监听多个事件，订阅者需要在 `App\Providers\EventServiceProvider`  的 `$subscribe` 属性中注册。
+1. 在`App\Providers\EventServiceProvider` 的 `$listen` 数组中增加事件类和监听者类的映射。
+2. 在`App\Providers\EventServiceProvider` 的 `boot()` 方法中设置基于字符串（事件名）和闭包（监听方法）的监听。
+3. 在自定义的订阅者中可以监听多个事件，订阅者需要在 `App\Providers\EventServiceProvider` 的 `$subscribe` 属性中注册。
 
 #### 事件触发
 
@@ -28,9 +29,7 @@ categories: Laravel
 
 ### 三. 核心事件类的注册
 
-通过追踪  `\App\Providers\EventServiceProvider` 类，发现其继承 `Illuminate\Foundation\Support\Providers\EventServiceProvider`
-
-
+通过追踪 `\App\Providers\EventServiceProvider` 类，发现其继承 `Illuminate\Foundation\Support\Providers\EventServiceProvider`
 
 `Illuminate\Foundation\Support\Providers\EventServiceProvider` 类通过调用 `Event` 门面的 `listen()` 和 `subscribe()`方法完成对事件的订阅。
 
@@ -70,12 +69,12 @@ class Event extends Facade
 }
 ```
 
-这里的 `events` 就是Laravel的事件监听器， 注册于 `\Illuminate\Foundation\Application:193`:
+这里的 `events` 就是 Laravel 的事件监听器， 注册于 `\Illuminate\Foundation\Application:193`:
 
 ```php
 protected function registerBaseServiceProviders()
 {
-  	$this->register(new EventServiceProvider($this));
+    $this->register(new EventServiceProvider($this));
 }
 ```
 
@@ -122,11 +121,11 @@ foreach ($this->listens() as $event => $listeners) {
 }
 
 foreach ($this->subscribe as $subscriber) {
-		Event::subscribe($subscriber);
+    Event::subscribe($subscriber);
 }
 ```
 
-可以看出事件的监听是依赖  `Dispatcher` 的 `listen()` 方法 和 `subscribe()` 方法实现的：
+可以看出事件的监听是依赖 `Dispatcher` 的 `listen()` 方法 和 `subscribe()` 方法实现的：
 
 ```php
 public function listen($events, $listener)
@@ -141,12 +140,12 @@ public function listen($events, $listener)
 }
 
 
-public function subscribe($subscriber)                   
-{                                                        
-    $subscriber = $this->resolveSubscriber($subscriber); 
-                                                         
-    $subscriber->subscribe($this);                       
-} 
+public function subscribe($subscriber)
+{
+    $subscriber = $this->resolveSubscriber($subscriber);
+
+    $subscriber->subscribe($this);
+}
 ```
 
 根据监听事件的模式不同，储存至不同的属性中：
@@ -156,7 +155,7 @@ public function subscribe($subscriber)
 ```php
 protected function setupWildcardListen($event, $listener)
 {
-		$this->wildcards[$event][] = $this->makeListener($listener, true);
+    $this->wildcards[$event][] = $this->makeListener($listener, true);
 }
 ```
 
@@ -165,12 +164,12 @@ protected function setupWildcardListen($event, $listener)
 此处通过 `makeListener` 解析出监听器：
 
 ```php
-/**                                                                 
- * Register an event listener with the dispatcher.                  
- *                                                                  
- * @param  \Closure|string  $listener                               
- * @param  bool  $wildcard                                          
- * @return \Closure                                                 
+/**
+ * Register an event listener with the dispatcher.
+ *
+ * @param  \Closure|string  $listener
+ * @param  bool  $wildcard
+ * @return \Closure
  */
 public function makeListener($listener, $wildcard = false)
 {
@@ -216,7 +215,7 @@ public function createClassListener($listener, $wildcard = false)
 }
 ```
 
-通过 `createClassCallable`  从服务容器中解析出 对应的类方法:
+通过 `createClassCallable` 从服务容器中解析出 对应的类方法:
 
 ```php
 /**
@@ -235,11 +234,11 @@ protected function createClassCallable($listener)
 		**/
     return [$this->container->make($class), $method];
 }
-                                                      
-protected function parseClassCallable($listener)           
-{                                                          
-    return Str::parseCallback($listener, 'handle');        
-}                                                          
+
+protected function parseClassCallable($listener)
+{
+    return Str::parseCallback($listener, 'handle');
+}
 
 public static function parseCallback($callback, $default = null)
 {
@@ -250,20 +249,20 @@ public static function parseCallback($callback, $default = null)
 `subscribe()` 方法的实现依赖于 `listen()`方法
 
 ```php
-public function subscribe($subscriber)                   
-{                                                        
-    $subscriber = $this->resolveSubscriber($subscriber); 
-                                                         
-    $subscriber->subscribe($this);                       
+public function subscribe($subscriber)
+{
+    $subscriber = $this->resolveSubscriber($subscriber);
+
+    $subscriber->subscribe($this);
 }
 
-protected function resolveSubscriber($subscriber)   
-{                                                   
-    if (is_string($subscriber)) {                   
-        return $this->container->make($subscriber); 
-    }                                               
-                                                    
-    return $subscriber;                             
+protected function resolveSubscriber($subscriber)
+{
+    if (is_string($subscriber)) {
+        return $this->container->make($subscriber);
+    }
+
+    return $subscriber;
 }
 
 /**
@@ -289,7 +288,7 @@ public function subscribe($events)
 
 `event()` 方法实现：
 
-```
+```php
 /**
 * Dispatch an event and call the listeners.
 *
@@ -306,7 +305,7 @@ function event(...$args)
 
 `dispatch()` 方法：
 
-```
+```php
 /**
 * Fire an event and call the listeners.
 *
@@ -332,9 +331,9 @@ public function dispatch($event, $payload = [], $halt = false)
     foreach ($this->getListeners($event) as $listener) {
         $response = $listener($event, $payload);
 
-				//如果侦听器返回了响应，并且启用了事件暂停功能，
-				//我们将仅返回此响应，而不会调用事件的其余部分
-				//。否则，我们会将响应添加到响应列表中。
+        //如果侦听器返回了响应，并且启用了事件暂停功能，
+        //我们将仅返回此响应，而不会调用事件的其余部分
+        //。否则，我们会将响应添加到响应列表中。
         if ($halt && ! is_null($response)) {
             return $response;
         }
@@ -367,7 +366,7 @@ protected function parseEventAndPayload($event, $payload)
 
 `getListeners()` 方法：
 
-```
+```php
 public function getListeners($eventName)
 {
     $listeners = $this->listeners[$eventName] ?? [];
@@ -415,4 +414,3 @@ protected function addInterfaceListeners($eventName, array $listeners = [])
     return $listeners;
 }
 ```
-
