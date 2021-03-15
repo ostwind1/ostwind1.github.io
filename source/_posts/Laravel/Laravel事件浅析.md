@@ -1,7 +1,9 @@
 ---
 title: Laravel事件浅析
 date: 2021-03-15 10:49:38
-tags: Laravel PHP
+tags: 
+  - Laravel
+  - PHP
 categories: Laravel
 ---
 
