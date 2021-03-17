@@ -7,7 +7,7 @@ title: 朱林的博客
 subtitle: '十年饮冰，难凉热血'
 description: ''
 keywords: 编程,PHP
-author: Lin Zhu
+author: 朱林
 language: zh-CN
 timezone: ''
 
@@ -40,7 +40,7 @@ external_link:
   exclude: ''
 filename_case: 0
 render_drafts: false
-post_asset_folder: false
+post_asset_folder: true
 relative_link: false
 future: true
 highlight:
