@@ -5,6 +5,7 @@ tags:
   - Redis
   - 源码
 categories: Redis
+top: 1
 ---
 ## 我们为什么要学习Redis底层源码
 
