@@ -8,7 +8,7 @@ categories: Laravel
 ---
 
 ## Laravel 事件源码浅析
-
+<!-- more -->
 ### 一.前言
 
 需要了解以下基础知识：
@@ -16,7 +16,7 @@ categories: Laravel
 - Laravel 事件系统：https://learnku.com/docs/laravel/5.5/events/1318
 - Facades：https://learnku.com/docs/laravel/5.5/facades/1291
 - 服务提供者：https://learnku.com/docs/laravel/5.5/providers/1290
-
+<!-- more -->
 ### 二. 监听者注册和事件触发方式
 
 #### 注册监听
