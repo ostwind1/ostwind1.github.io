@@ -5,6 +5,7 @@ tags:
   - Laravel
   - PHP
 categories: Laravel
+summary: 解析Laravel中是如何实现观察者模式的
 ---
 
 ## Laravel 事件源码浅析

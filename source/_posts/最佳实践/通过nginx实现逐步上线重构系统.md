@@ -3,6 +3,7 @@ title: 通过nginx实现逐步上线重构系统
 date: 2021-03-21 21:18:42
 tags: 工程实践
 category: 最佳实践
+summary: nginx能力小实践
 ---
 <!-- more -->
 ## 00 背景
