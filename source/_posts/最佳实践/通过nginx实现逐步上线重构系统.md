@@ -8,7 +8,6 @@ category: 最佳实践
 ## 00 背景
 公司现有一个历史遗留项目，项目为 `PHP5.6`+`Smart` 构建的单站点应用。现使用 `Laravel` + `Vue` 重构为前后端分离项目。
 为减小一次性上线风险，使用nginx反向代理能力，分模块逐步上线重构后的项目。
-<!-- more -->
 
 ## 01 操作方法
 > nginx 规则：https://moonbingbing.gitbooks.io/openresty-best-practices/content/ngx/nginx_local_pcre.html
