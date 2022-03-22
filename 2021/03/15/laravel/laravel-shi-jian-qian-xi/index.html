@@ -1,0 +1,1366 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="Laravel事件浅析, 编程,PHP">
+    <meta name="description" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <title>Laravel事件浅析 | 朱林的博客</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+
+    <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
+    <link rel="stylesheet" type="text/css" href="/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="/css/my.css">
+
+    <script src="/libs/jquery/jquery.min.js"></script>
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="/medias/logo.png" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">朱林的博客</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>标签</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>分类</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>归档</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/contact" class="waves-effect waves-light">
+      
+      <i class="fas fa-comments" style="zoom: 0.6;"></i>
+      
+      <span>留言板</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/friends" class="waves-effect waves-light">
+      
+      <i class="fas fa-address-book" style="zoom: 0.6;"></i>
+      
+      <span>友情链接</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/medias/logo.png" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">朱林的博客</div>
+        <div class="logo-desc">
+            
+            Never really desperate, only the lost of the soul.
+            
+        </div>
+    </div>
+
+    
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			标签
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			分类
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			归档
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			关于
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/contact" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-comments"></i>
+			
+			留言板
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/friends" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-address-book"></i>
+			
+			友情链接
+		</a>
+          
+        </li>
+        
+        
+    </ul>
+</div>
+
+
+        </div>
+
+        
+    </nav>
+
+</header>
+
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/15.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">Laravel事件浅析</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <link rel="stylesheet" href="/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        width: 345px;
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        padding: 35px 0 15px 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content {
+        padding-bottom: 30px;
+        overflow: auto;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+
+        position: absolute;
+        right: 23.5vw;
+        display: block;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 15px;
+        bottom: 76px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/Laravel/">
+                                <span class="chip bg-color">Laravel</span>
+                            </a>
+                        
+                            <a href="/tags/PHP/">
+                                <span class="chip bg-color">PHP</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/Laravel/" class="post-category">
+                                Laravel
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2021-03-15
+                </div>
+                
+
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
+                    2021-03-15
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
+                    1.5k
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
+                    7 分
+                </div>
+                
+
+                
+                    <div id="busuanzi_container_page_pv" class="info-break-policy">
+                        <i class="far fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv"></span>
+                    </div>
+				
+            </div>
+        </div>
+        <hr class="clearfix">
+
+        
+        <!-- 是否加载使用自带的 prismjs. -->
+        <link rel="stylesheet" href="/libs/prism/prism.css">
+        
+
+        
+
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <h2 id="Laravel-事件源码浅析"><a href="#Laravel-事件源码浅析" class="headerlink" title="Laravel 事件源码浅析"></a>Laravel 事件源码浅析</h2><h3 id="一-前言"><a href="#一-前言" class="headerlink" title="一.前言"></a>一.前言</h3><p>需要了解以下基础知识：</p>
+<ul>
+<li>Laravel 事件系统：<a target="_blank" rel="noopener" href="https://learnku.com/docs/laravel/5.5/events/1318">https://learnku.com/docs/laravel/5.5/events/1318</a></li>
+<li>Facades：<a target="_blank" rel="noopener" href="https://learnku.com/docs/laravel/5.5/facades/1291">https://learnku.com/docs/laravel/5.5/facades/1291</a></li>
+<li>服务提供者：<a target="_blank" rel="noopener" href="https://learnku.com/docs/laravel/5.5/providers/1290">https://learnku.com/docs/laravel/5.5/providers/1290</a><h3 id="二-监听者注册和事件触发方式"><a href="#二-监听者注册和事件触发方式" class="headerlink" title="二. 监听者注册和事件触发方式"></a>二. 监听者注册和事件触发方式</h3></li>
+</ul>
+<h4 id="注册监听"><a href="#注册监听" class="headerlink" title="注册监听"></a>注册监听</h4><ol>
+<li>在<code>App\Providers\EventServiceProvider</code> 的 <code>$listen</code> 数组中增加事件类和监听者类的映射。</li>
+<li>在<code>App\Providers\EventServiceProvider</code> 的 <code>boot()</code> 方法中设置基于字符串（事件名）和闭包（监听方法）的监听。</li>
+<li>在自定义的订阅者中可以监听多个事件，订阅者需要在 <code>App\Providers\EventServiceProvider</code> 的 <code>$subscribe</code> 属性中注册。</li>
+</ol>
+<h4 id="事件触发"><a href="#事件触发" class="headerlink" title="事件触发"></a>事件触发</h4><p>使用辅助方法 <code>event()</code> 触发事件。</p>
+<h3 id="三-核心事件类的注册"><a href="#三-核心事件类的注册" class="headerlink" title="三. 核心事件类的注册"></a>三. 核心事件类的注册</h3><p>通过追踪 <code>\App\Providers\EventServiceProvider</code> 类，发现其继承 <code>Illuminate\Foundation\Support\Providers\EventServiceProvider</code></p>
+<p><code>Illuminate\Foundation\Support\Providers\EventServiceProvider</code> 类通过调用 <code>Event</code> 门面的 <code>listen()</code> 和 <code>subscribe()</code>方法完成对事件的订阅。</p>
+<pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token keyword">public</span> <span class="token keyword">function</span> <span class="token function">boot</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+    <span class="token keyword">foreach</span> <span class="token punctuation">(</span><span class="token variable">$this</span><span class="token operator">-></span><span class="token function">listens</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">as</span> <span class="token variable">$event</span> <span class="token operator">=></span> <span class="token variable">$listeners</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">foreach</span> <span class="token punctuation">(</span><span class="token variable">$listeners</span> <span class="token keyword">as</span> <span class="token variable">$listener</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            <span class="token class-name static-context">Event</span><span class="token operator">::</span><span class="token function">listen</span><span class="token punctuation">(</span><span class="token variable">$event</span><span class="token punctuation">,</span> <span class="token variable">$listener</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token keyword">foreach</span> <span class="token punctuation">(</span><span class="token variable">$this</span><span class="token operator">-></span><span class="token property">subscribe</span> <span class="token keyword">as</span> <span class="token variable">$subscriber</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token class-name static-context">Event</span><span class="token operator">::</span><span class="token function">subscribe</span><span class="token punctuation">(</span><span class="token variable">$subscriber</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h5 id="Event-门面核心代码如下："><a href="#Event-门面核心代码如下：" class="headerlink" title="Event 门面核心代码如下："></a>Event 门面核心代码如下：</h5><pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token comment">/**
+ * @see \Illuminate\Events\Dispatcher
+ */</span>
+<span class="token keyword">class</span> <span class="token class-name">Event</span> <span class="token keyword">extends</span> <span class="token class-name">Facade</span>
+<span class="token punctuation">&#123;</span>
+  	<span class="token comment">//........</span>
+    <span class="token comment">/**
+     * Get the registered name of the component.
+     *
+     * @return string
+     */</span>
+    <span class="token keyword">protected</span> <span class="token keyword">static</span> <span class="token keyword">function</span> <span class="token function">getFacadeAccessor</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token punctuation">&#123;</span>
+        <span class="token keyword">return</span> <span class="token string single-quoted-string">'events'</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>这里的 <code>events</code> 就是 Laravel 的事件监听器， 注册于 <code>\Illuminate\Foundation\Application:193</code>:</p>
+<pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token keyword">protected</span> <span class="token keyword">function</span> <span class="token function">registerBaseServiceProviders</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+    <span class="token variable">$this</span><span class="token operator">-></span><span class="token function">register</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">EventServiceProvider</span><span class="token punctuation">(</span><span class="token variable">$this</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><code>\Illuminate\Events\EventServiceProvider</code> :</p>
+<pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token keyword">class</span> EventServiceProvider <span class="token keyword">extends</span> <span class="token class-name">ServiceProvider</span>
+<span class="token punctuation">&#123;</span>
+    <span class="token comment">/**
+     * Register the service provider.
+     *
+     * @return void
+     */</span>
+    <span class="token keyword">public</span> <span class="token keyword">function</span> <span class="token function">register</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token punctuation">&#123;</span>
+        <span class="token variable">$this</span><span class="token operator">-></span><span class="token property">app</span><span class="token operator">-></span><span class="token function">singleton</span><span class="token punctuation">(</span><span class="token string single-quoted-string">'events'</span><span class="token punctuation">,</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token variable">$app</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            <span class="token keyword">return</span> <span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Dispatcher</span><span class="token punctuation">(</span><span class="token variable">$app</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token operator">-></span><span class="token function">setQueueResolver</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">use</span> <span class="token punctuation">(</span><span class="token variable">$app</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+                <span class="token keyword">return</span> <span class="token variable">$app</span><span class="token operator">-></span><span class="token function">make</span><span class="token punctuation">(</span><span class="token class-name static-context">QueueFactoryContract</span><span class="token operator">::</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>去除掉绑定队列实现的操作，核心代码如下：</p>
+<pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token variable">$this</span><span class="token operator">-></span><span class="token property">app</span><span class="token operator">-></span><span class="token function">singleton</span><span class="token punctuation">(</span><span class="token string single-quoted-string">'events'</span><span class="token punctuation">,</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token variable">$app</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">return</span> <span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Dispatcher</span><span class="token punctuation">(</span><span class="token variable">$app</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<p>可见，事件服务的核心类就是 <code>\Illuminate\Events\Dispatcher</code> 。</p>
+<h3 id="四-事件监听的注册"><a href="#四-事件监听的注册" class="headerlink" title="四. 事件监听的注册"></a>四. 事件监听的注册</h3><p>结合上边 <code>Illuminate\Foundation\Support\Providers\EventServiceProvider</code> 的内容:</p>
+<pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token keyword">foreach</span> <span class="token punctuation">(</span><span class="token variable">$this</span><span class="token operator">-></span><span class="token function">listens</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">as</span> <span class="token variable">$event</span> <span class="token operator">=></span> <span class="token variable">$listeners</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">foreach</span> <span class="token punctuation">(</span><span class="token variable">$listeners</span> <span class="token keyword">as</span> <span class="token variable">$listener</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+      	<span class="token class-name static-context">Event</span><span class="token operator">::</span><span class="token function">listen</span><span class="token punctuation">(</span><span class="token variable">$event</span><span class="token punctuation">,</span> <span class="token variable">$listener</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token keyword">foreach</span> <span class="token punctuation">(</span><span class="token variable">$this</span><span class="token operator">-></span><span class="token property">subscribe</span> <span class="token keyword">as</span> <span class="token variable">$subscriber</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token class-name static-context">Event</span><span class="token operator">::</span><span class="token function">subscribe</span><span class="token punctuation">(</span><span class="token variable">$subscriber</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>可以看出事件的监听是依赖 <code>Dispatcher</code> 的 <code>listen()</code> 方法 和 <code>subscribe()</code> 方法实现的：</p>
+<pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token keyword">public</span> <span class="token keyword">function</span> <span class="token function">listen</span><span class="token punctuation">(</span><span class="token variable">$events</span><span class="token punctuation">,</span> <span class="token variable">$listener</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+    <span class="token keyword">foreach</span> <span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token keyword type-casting">array</span><span class="token punctuation">)</span> <span class="token variable">$events</span> <span class="token keyword">as</span> <span class="token variable">$event</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token class-name static-context">Str</span><span class="token operator">::</span><span class="token function">contains</span><span class="token punctuation">(</span><span class="token variable">$event</span><span class="token punctuation">,</span> <span class="token string single-quoted-string">'*'</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+          	<span class="token variable">$this</span><span class="token operator">-></span><span class="token function">setupWildcardListen</span><span class="token punctuation">(</span><span class="token variable">$event</span><span class="token punctuation">,</span> <span class="token variable">$listener</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
+          	<span class="token variable">$this</span><span class="token operator">-></span><span class="token property">listeners</span><span class="token punctuation">[</span><span class="token variable">$event</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token variable">$this</span><span class="token operator">-></span><span class="token function">makeListener</span><span class="token punctuation">(</span><span class="token variable">$listener</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span>
+
+
+<span class="token keyword">public</span> <span class="token keyword">function</span> <span class="token function">subscribe</span><span class="token punctuation">(</span><span class="token variable">$subscriber</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+    <span class="token variable">$subscriber</span> <span class="token operator">=</span> <span class="token variable">$this</span><span class="token operator">-></span><span class="token function">resolveSubscriber</span><span class="token punctuation">(</span><span class="token variable">$subscriber</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token variable">$subscriber</span><span class="token operator">-></span><span class="token function">subscribe</span><span class="token punctuation">(</span><span class="token variable">$this</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>根据监听事件的模式不同，储存至不同的属性中：</p>
+<ol>
+<li>当 事件名 中包含 <code>*</code> 时，认为是 通配符事件监听，将会把事件监听映射存储至 <code>$wildcards</code> 属性。</li>
+</ol>
+<pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token keyword">protected</span> <span class="token keyword">function</span> <span class="token function">setupWildcardListen</span><span class="token punctuation">(</span><span class="token variable">$event</span><span class="token punctuation">,</span> <span class="token variable">$listener</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+    <span class="token variable">$this</span><span class="token operator">-></span><span class="token property">wildcards</span><span class="token punctuation">[</span><span class="token variable">$event</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token variable">$this</span><span class="token operator">-></span><span class="token function">makeListener</span><span class="token punctuation">(</span><span class="token variable">$listener</span><span class="token punctuation">,</span> <span class="token constant boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<ol start="2">
+<li>否则会将事件监听映射存储至 <code>$listeners</code> 属性。</li>
+</ol>
+<p>此处通过 <code>makeListener</code> 解析出监听器：</p>
+<pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token comment">/**
+ * Register an event listener with the dispatcher.
+ *
+ * @param  \Closure|string  $listener
+ * @param  bool  $wildcard
+ * @return \Closure
+ */</span>
+<span class="token keyword">public</span> <span class="token keyword">function</span> <span class="token function">makeListener</span><span class="token punctuation">(</span><span class="token variable">$listener</span><span class="token punctuation">,</span> <span class="token variable">$wildcard</span> <span class="token operator">=</span> <span class="token constant boolean">false</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">is_string</span><span class="token punctuation">(</span><span class="token variable">$listener</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">return</span> <span class="token variable">$this</span><span class="token operator">-></span><span class="token function">createClassListener</span><span class="token punctuation">(</span><span class="token variable">$listener</span><span class="token punctuation">,</span> <span class="token variable">$wildcard</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token keyword">return</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token variable">$event</span><span class="token punctuation">,</span> <span class="token variable">$payload</span><span class="token punctuation">)</span> <span class="token keyword">use</span> <span class="token punctuation">(</span><span class="token variable">$listener</span><span class="token punctuation">,</span> <span class="token variable">$wildcard</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token variable">$wildcard</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            <span class="token keyword">return</span> <span class="token variable">$listener</span><span class="token punctuation">(</span><span class="token variable">$event</span><span class="token punctuation">,</span> <span class="token variable">$payload</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+
+      <span class="token keyword">return</span> <span class="token variable">$listener</span><span class="token punctuation">(</span><span class="token operator">...</span><span class="token function">array_values</span><span class="token punctuation">(</span><span class="token variable">$payload</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>如果 <code>$listener</code> 是字符串 ：那么会通过<code>createClassListener</code> 来 将监听方法解析为闭包</p>
+<p>如果 <code>$listener</code> 是闭包，那么也会封装为统一的闭包</p>
+<p><code>createClassListener</code> :</p>
+<pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token comment">/**
+ * Create a class based listener using the IoC container.
+ *
+ * @param  string  $listener
+ * @param  bool  $wildcard
+ * @return \Closure
+ */</span>
+<span class="token keyword">public</span> <span class="token keyword">function</span> <span class="token function">createClassListener</span><span class="token punctuation">(</span><span class="token variable">$listener</span><span class="token punctuation">,</span> <span class="token variable">$wildcard</span> <span class="token operator">=</span> <span class="token constant boolean">false</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+    <span class="token keyword">return</span> <span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token variable">$event</span><span class="token punctuation">,</span> <span class="token variable">$payload</span><span class="token punctuation">)</span> <span class="token keyword">use</span> <span class="token punctuation">(</span><span class="token variable">$listener</span><span class="token punctuation">,</span> <span class="token variable">$wildcard</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token variable">$wildcard</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            <span class="token keyword">return</span> <span class="token function">call_user_func</span><span class="token punctuation">(</span><span class="token variable">$this</span><span class="token operator">-></span><span class="token function">createClassCallable</span><span class="token punctuation">(</span><span class="token variable">$listener</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token variable">$event</span><span class="token punctuation">,</span> <span class="token variable">$payload</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+
+        <span class="token keyword">return</span> <span class="token function">call_user_func_array</span><span class="token punctuation">(</span>
+            <span class="token variable">$this</span><span class="token operator">-></span><span class="token function">createClassCallable</span><span class="token punctuation">(</span><span class="token variable">$listener</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token variable">$payload</span>
+        <span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>通过 <code>createClassCallable</code> 从服务容器中解析出 对应的类方法:</p>
+<pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token comment">/**
+ * Create the class based event callable.
+ *
+ * @param  string  $listener
+ * @return callable
+ */</span>
+<span class="token keyword">protected</span> <span class="token keyword">function</span> <span class="token function">createClassCallable</span><span class="token punctuation">(</span><span class="token variable">$listener</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+    <span class="token keyword">list</span><span class="token punctuation">(</span><span class="token variable">$class</span><span class="token punctuation">,</span> <span class="token variable">$method</span><span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token variable">$this</span><span class="token operator">-></span><span class="token function">parseClassCallable</span><span class="token punctuation">(</span><span class="token variable">$listener</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+		<span class="token comment">/**队列代码  忽略
+    if ($this->handlerShouldBeQueued($class)) &#123;
+        return $this->createQueuedHandlerCallable($class, $method);
+    &#125;
+		**/</span>
+    <span class="token keyword">return</span> <span class="token punctuation">[</span><span class="token variable">$this</span><span class="token operator">-></span><span class="token property">container</span><span class="token operator">-></span><span class="token function">make</span><span class="token punctuation">(</span><span class="token variable">$class</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token variable">$method</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token keyword">protected</span> <span class="token keyword">function</span> <span class="token function">parseClassCallable</span><span class="token punctuation">(</span><span class="token variable">$listener</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+    <span class="token keyword">return</span> <span class="token class-name static-context">Str</span><span class="token operator">::</span><span class="token function">parseCallback</span><span class="token punctuation">(</span><span class="token variable">$listener</span><span class="token punctuation">,</span> <span class="token string single-quoted-string">'handle'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">function</span> <span class="token function">parseCallback</span><span class="token punctuation">(</span><span class="token variable">$callback</span><span class="token punctuation">,</span> <span class="token variable">$default</span> <span class="token operator">=</span> <span class="token constant">null</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+  	<span class="token keyword">return</span> <span class="token keyword static-context">static</span><span class="token operator">::</span><span class="token function">contains</span><span class="token punctuation">(</span><span class="token variable">$callback</span><span class="token punctuation">,</span> <span class="token string single-quoted-string">'@'</span><span class="token punctuation">)</span> <span class="token operator">?</span> <span class="token function">explode</span><span class="token punctuation">(</span><span class="token string single-quoted-string">'@'</span><span class="token punctuation">,</span> <span class="token variable">$callback</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span> <span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token variable">$callback</span><span class="token punctuation">,</span> <span class="token variable">$default</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><code>subscribe()</code> 方法的实现依赖于 <code>listen()</code>方法</p>
+<pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token keyword">public</span> <span class="token keyword">function</span> <span class="token function">subscribe</span><span class="token punctuation">(</span><span class="token variable">$subscriber</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+    <span class="token variable">$subscriber</span> <span class="token operator">=</span> <span class="token variable">$this</span><span class="token operator">-></span><span class="token function">resolveSubscriber</span><span class="token punctuation">(</span><span class="token variable">$subscriber</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token variable">$subscriber</span><span class="token operator">-></span><span class="token function">subscribe</span><span class="token punctuation">(</span><span class="token variable">$this</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token keyword">protected</span> <span class="token keyword">function</span> <span class="token function">resolveSubscriber</span><span class="token punctuation">(</span><span class="token variable">$subscriber</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">is_string</span><span class="token punctuation">(</span><span class="token variable">$subscriber</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">return</span> <span class="token variable">$this</span><span class="token operator">-></span><span class="token property">container</span><span class="token operator">-></span><span class="token function">make</span><span class="token punctuation">(</span><span class="token variable">$subscriber</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token keyword">return</span> <span class="token variable">$subscriber</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token comment">/**
+自定义的订阅者 subscribe() 方法 示例
+*/</span>
+<span class="token keyword">public</span> <span class="token keyword">function</span> <span class="token function">subscribe</span><span class="token punctuation">(</span><span class="token variable">$events</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+  <span class="token comment">//接口响应事件</span>
+  <span class="token variable">$events</span><span class="token operator">-></span><span class="token function">listen</span><span class="token punctuation">(</span>
+    <span class="token class-name static-context">RequestHandled</span><span class="token operator">::</span><span class="token keyword">class</span><span class="token punctuation">,</span>
+    <span class="token string single-quoted-string">'App\Listeners\AlertEventSubscriber@onApiResponse'</span>
+  <span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+  <span class="token comment">//提交服务单事件</span>
+  <span class="token variable">$events</span><span class="token operator">-></span><span class="token function">listen</span><span class="token punctuation">(</span>
+    <span class="token class-name static-context">CommitWorkOrder</span><span class="token operator">::</span><span class="token keyword">class</span><span class="token punctuation">,</span>
+    <span class="token string single-quoted-string">'App\Listeners\AlertEventSubscriber@onCommitInsurance'</span>
+  <span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="四-事件触发"><a href="#四-事件触发" class="headerlink" title="四. 事件触发"></a>四. 事件触发</h3><p><code>event()</code> 方法实现：</p>
+<pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token comment">/**
+* Dispatch an event and call the listeners.
+*
+* @param  string|object  $event
+* @param  mixed  $payload
+* @param  bool  $halt
+* @return array|null
+*/</span>
+<span class="token keyword">function</span> <span class="token function">event</span><span class="token punctuation">(</span><span class="token operator">...</span><span class="token variable">$args</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+		<span class="token keyword">return</span> <span class="token function">app</span><span class="token punctuation">(</span><span class="token string single-quoted-string">'events'</span><span class="token punctuation">)</span><span class="token operator">-></span><span class="token function">dispatch</span><span class="token punctuation">(</span><span class="token operator">...</span><span class="token variable">$args</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><code>dispatch()</code> 方法：</p>
+<pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token comment">/**
+* Fire an event and call the listeners.
+*
+* @param  string|object  $event
+* @param  mixed  $payload
+* @param  bool  $halt
+* @return array|null
+*/</span>
+<span class="token keyword">public</span> <span class="token keyword">function</span> <span class="token function">dispatch</span><span class="token punctuation">(</span><span class="token variable">$event</span><span class="token punctuation">,</span> <span class="token variable">$payload</span> <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token variable">$halt</span> <span class="token operator">=</span> <span class="token constant boolean">false</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+    <span class="token comment">//当给定的“事件”实际上是一个对象时，我们将假定它是一个事件</span>
+    <span class="token comment">//对象，并使用类作为事件名称，并使用该事件本身作为处理程序的有效负载，这使基于对象的事件非常简单</span>
+    <span class="token keyword">list</span><span class="token punctuation">(</span><span class="token variable">$event</span><span class="token punctuation">,</span> <span class="token variable">$payload</span><span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token variable">$this</span><span class="token operator">-></span><span class="token function">parseEventAndPayload</span><span class="token punctuation">(</span>
+        <span class="token variable">$event</span><span class="token punctuation">,</span> <span class="token variable">$payload</span>
+    <span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token variable">$this</span><span class="token operator">-></span><span class="token function">shouldBroadcast</span><span class="token punctuation">(</span><span class="token variable">$payload</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token variable">$this</span><span class="token operator">-></span><span class="token function">broadcastEvent</span><span class="token punctuation">(</span><span class="token variable">$payload</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token variable">$responses</span> <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">foreach</span> <span class="token punctuation">(</span><span class="token variable">$this</span><span class="token operator">-></span><span class="token function">getListeners</span><span class="token punctuation">(</span><span class="token variable">$event</span><span class="token punctuation">)</span> <span class="token keyword">as</span> <span class="token variable">$listener</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token variable">$response</span> <span class="token operator">=</span> <span class="token variable">$listener</span><span class="token punctuation">(</span><span class="token variable">$event</span><span class="token punctuation">,</span> <span class="token variable">$payload</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token comment">//如果侦听器返回了响应，并且启用了事件暂停功能，</span>
+        <span class="token comment">//我们将仅返回此响应，而不会调用事件的其余部分</span>
+        <span class="token comment">//。否则，我们会将响应添加到响应列表中。</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token variable">$halt</span> <span class="token operator">&amp;&amp;</span> <span class="token operator">!</span> <span class="token function">is_null</span><span class="token punctuation">(</span><span class="token variable">$response</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            <span class="token keyword">return</span> <span class="token variable">$response</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+
+        <span class="token comment">//如果侦听器返回了布尔值false，我们将停止将该事件传播到链中的其他侦听器，否则我们将继续</span>
+        <span class="token comment">//遍历侦听器并触发序列中的每个侦听器。</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token variable">$response</span> <span class="token operator">===</span> <span class="token constant boolean">false</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            <span class="token keyword">break</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+
+        <span class="token variable">$responses</span><span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token variable">$response</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token keyword">return</span> <span class="token variable">$halt</span> <span class="token operator">?</span> <span class="token argument-name">null</span> <span class="token punctuation">:</span> <span class="token variable">$responses</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>这里通过 <code>parseEventAndPayload()</code> 解析出 事件和参数，如果是对象事件，将对象的类名作为事件名，事件本身作为参数</p>
+<pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token keyword">protected</span> <span class="token keyword">function</span> <span class="token function">parseEventAndPayload</span><span class="token punctuation">(</span><span class="token variable">$event</span><span class="token punctuation">,</span> <span class="token variable">$payload</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+  	<span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">is_object</span><span class="token punctuation">(</span><span class="token variable">$event</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    	<span class="token keyword">list</span><span class="token punctuation">(</span><span class="token variable">$payload</span><span class="token punctuation">,</span> <span class="token variable">$event</span><span class="token punctuation">)</span> <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token variable">$event</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token function">get_class</span><span class="token punctuation">(</span><span class="token variable">$event</span><span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+  	<span class="token punctuation">&#125;</span>
+
+  	<span class="token keyword">return</span> <span class="token punctuation">[</span><span class="token variable">$event</span><span class="token punctuation">,</span> <span class="token class-name static-context">Arr</span><span class="token operator">::</span><span class="token function">wrap</span><span class="token punctuation">(</span><span class="token variable">$payload</span><span class="token punctuation">)</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><code>getListeners()</code> 方法：</p>
+<pre class="line-numbers language-php" data-language="php"><code class="language-php"><span class="token keyword">public</span> <span class="token keyword">function</span> <span class="token function">getListeners</span><span class="token punctuation">(</span><span class="token variable">$eventName</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+    <span class="token variable">$listeners</span> <span class="token operator">=</span> <span class="token variable">$this</span><span class="token operator">-></span><span class="token property">listeners</span><span class="token punctuation">[</span><span class="token variable">$eventName</span><span class="token punctuation">]</span> <span class="token operator">??</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+
+    <span class="token variable">$listeners</span> <span class="token operator">=</span> <span class="token function">array_merge</span><span class="token punctuation">(</span>
+        <span class="token variable">$listeners</span><span class="token punctuation">,</span> <span class="token variable">$this</span><span class="token operator">-></span><span class="token function">getWildcardListeners</span><span class="token punctuation">(</span><span class="token variable">$eventName</span><span class="token punctuation">)</span>
+    <span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">return</span> <span class="token function">class_exists</span><span class="token punctuation">(</span><span class="token variable">$eventName</span><span class="token punctuation">,</span> <span class="token constant boolean">false</span><span class="token punctuation">)</span>
+    						<span class="token operator">?</span> <span class="token variable">$this</span><span class="token operator">-></span><span class="token function">addInterfaceListeners</span><span class="token punctuation">(</span><span class="token variable">$eventName</span><span class="token punctuation">,</span> <span class="token variable">$listeners</span><span class="token punctuation">)</span>
+    						<span class="token punctuation">:</span> <span class="token variable">$listeners</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token keyword">protected</span> <span class="token keyword">function</span> <span class="token function">getWildcardListeners</span><span class="token punctuation">(</span><span class="token variable">$eventName</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+    <span class="token variable">$wildcards</span> <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">foreach</span> <span class="token punctuation">(</span><span class="token variable">$this</span><span class="token operator">-></span><span class="token property">wildcards</span> <span class="token keyword">as</span> <span class="token variable">$key</span> <span class="token operator">=></span> <span class="token variable">$listeners</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token class-name static-context">Str</span><span class="token operator">::</span><span class="token function">is</span><span class="token punctuation">(</span><span class="token variable">$key</span><span class="token punctuation">,</span> <span class="token variable">$eventName</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            <span class="token variable">$wildcards</span> <span class="token operator">=</span> <span class="token function">array_merge</span><span class="token punctuation">(</span><span class="token variable">$wildcards</span><span class="token punctuation">,</span> <span class="token variable">$listeners</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token keyword">return</span> <span class="token variable">$wildcards</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token comment">/**
+* 基于接口的事件冒泡
+* Add the listeners for the event's interfaces to the given array.
+*
+* @param  string  $eventName
+* @param  array  $listeners
+* @return array
+*/</span>
+<span class="token keyword">protected</span> <span class="token keyword">function</span> <span class="token function">addInterfaceListeners</span><span class="token punctuation">(</span><span class="token variable">$eventName</span><span class="token punctuation">,</span> <span class="token keyword type-hint">array</span> <span class="token variable">$listeners</span> <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+<span class="token punctuation">&#123;</span>
+    <span class="token keyword">foreach</span> <span class="token punctuation">(</span><span class="token function">class_implements</span><span class="token punctuation">(</span><span class="token variable">$eventName</span><span class="token punctuation">)</span> <span class="token keyword">as</span> <span class="token variable">$interface</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token keyword">isset</span><span class="token punctuation">(</span><span class="token variable">$this</span><span class="token operator">-></span><span class="token property">listeners</span><span class="token punctuation">[</span><span class="token variable">$interface</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            <span class="token keyword">foreach</span> <span class="token punctuation">(</span><span class="token variable">$this</span><span class="token operator">-></span><span class="token property">listeners</span><span class="token punctuation">[</span><span class="token variable">$interface</span><span class="token punctuation">]</span> <span class="token keyword">as</span> <span class="token variable">$names</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+                <span class="token variable">$listeners</span> <span class="token operator">=</span> <span class="token function">array_merge</span><span class="token punctuation">(</span><span class="token variable">$listeners</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token keyword type-casting">array</span><span class="token punctuation">)</span> <span class="token variable">$names</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">&#125;</span>
+        <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token keyword">return</span> <span class="token variable">$listeners</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+                
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="/about" rel="external nofollow noreferrer">朱林</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://ostwind1.guthub.io.com/2021/03/15/laravel/laravel-shi-jian-qian-xi/">https://ostwind1.guthub.io.com/2021/03/15/laravel/laravel-shi-jian-qian-xi/</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        版权声明:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="/about" target="_blank">朱林</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/Laravel/">
+                                    <span class="chip bg-color">Laravel</span>
+                                </a>
+                            
+                                <a href="/tags/PHP/">
+                                    <span class="chip bg-color">PHP</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+<div id="article-share">
+
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/2021/03/17/redis/redis-yuan-ma-zhi-sds/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/5.jpg" class="responsive-img" alt="Redis源码之SDS">
+                        
+                        <span class="card-title">Redis源码之SDS</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            Reids 基础数据结构
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2021-03-17
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Redis/" class="post-category">
+                                    Redis
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Redis/">
+                        <span class="chip bg-color">Redis</span>
+                    </a>
+                    
+                    <a href="/tags/source-code/">
+                        <span class="chip bg-color">源码</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                本篇&nbsp;<i class="far fa-dot-circle"></i>
+            </div>
+            <div class="card">
+                <a href="/2021/03/15/laravel/laravel-shi-jian-qian-xi/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/15.jpg" class="responsive-img" alt="Laravel事件浅析">
+                        
+                        <span class="card-title">Laravel事件浅析</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            解析Laravel中是如何实现观察者模式的
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-03-15
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Laravel/" class="post-category">
+                                    Laravel
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Laravel/">
+                        <span class="chip bg-color">Laravel</span>
+                    </a>
+                    
+                    <a href="/tags/PHP/">
+                        <span class="chip bg-color">PHP</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeShrink.js"></script>
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget card" style="background-color: white;">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('0'),
+            headingSelector: 'h2, h3, h4'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h2, h3, h4').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+
+
+    <footer class="page-footer bg-color">
+    
+    <div class="container row center-align" style="margin-bottom: 0px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            
+                <span id="year">2019-2022</span>
+            
+            <span id="year">2019</span>
+            <a href="/about" target="_blank">朱林</a>
+            |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
+            |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
+            <br>
+            
+            &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
+                class="white-color">12k</span>&nbsp;字
+            
+            
+            
+            
+            
+            
+            <span id="busuanzi_container_site_pv">
+                |&nbsp;<i class="far fa-eye"></i>&nbsp;总访问量:&nbsp;<span id="busuanzi_value_site_pv"
+                    class="white-color"></span>&nbsp;次
+            </span>
+            
+            
+            <span id="busuanzi_container_site_uv">
+                |&nbsp;<i class="fas fa-users"></i>&nbsp;总访问人数:&nbsp;<span id="busuanzi_value_site_uv"
+                    class="white-color"></span>&nbsp;人
+            </span>
+            
+            <br>
+            
+            <br>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/ostwind1" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:241807188@qq.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+
+
+
+
+    <a href="tencent://AddContact/?fromId=50&fromSubId=1&subcmd=all&uin=2418071885" class="tooltipped" target="_blank" data-tooltip="QQ联系我: 2418071885" data-position="top" data-delay="50">
+        <i class="fab fa-qq"></i>
+    </a>
+
+
+
+
+
+
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+$(function () {
+    var searchFunc = function (path, search_id, content_id) {
+        'use strict';
+        $.ajax({
+            url: path,
+            dataType: "xml",
+            success: function (xmlResponse) {
+                // get the contents from search data
+                var datas = $("entry", xmlResponse).map(function () {
+                    return {
+                        title: $("title", this).text(),
+                        content: $("content", this).text(),
+                        url: $("url", this).text()
+                    };
+                }).get();
+                var $input = document.getElementById(search_id);
+                var $resultContent = document.getElementById(content_id);
+                $input.addEventListener('input', function () {
+                    var str = '<ul class=\"search-result-list\">';
+                    var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                    $resultContent.innerHTML = "";
+                    if (this.value.trim().length <= 0) {
+                        return;
+                    }
+                    // perform local searching
+                    datas.forEach(function (data) {
+                        var isMatch = true;
+                        var data_title = data.title.trim().toLowerCase();
+                        var data_content = data.content.trim().replace(/<[^>]+>/g, "").toLowerCase();
+                        var data_url = data.url;
+                        data_url = data_url.indexOf('/') === 0 ? data.url : '/' + data_url;
+                        var index_title = -1;
+                        var index_content = -1;
+                        var first_occur = -1;
+                        // only match artiles with not empty titles and contents
+                        if (data_title !== '' && data_content !== '') {
+                            keywords.forEach(function (keyword, i) {
+                                index_title = data_title.indexOf(keyword);
+                                index_content = data_content.indexOf(keyword);
+                                if (index_title < 0 && index_content < 0) {
+                                    isMatch = false;
+                                } else {
+                                    if (index_content < 0) {
+                                        index_content = 0;
+                                    }
+                                    if (i === 0) {
+                                        first_occur = index_content;
+                                    }
+                                }
+                            });
+                        }
+                        // show search results
+                        if (isMatch) {
+                            str += "<li><a href='" + data_url + "' class='search-result-title'>" + data_title + "</a>";
+                            var content = data.content.trim().replace(/<[^>]+>/g, "");
+                            if (first_occur >= 0) {
+                                // cut out 100 characters
+                                var start = first_occur - 20;
+                                var end = first_occur + 80;
+                                if (start < 0) {
+                                    start = 0;
+                                }
+                                if (start === 0) {
+                                    end = 100;
+                                }
+                                if (end > content.length) {
+                                    end = content.length;
+                                }
+                                var match_content = content.substr(start, end);
+                                // highlight all keywords
+                                keywords.forEach(function (keyword) {
+                                    var regS = new RegExp(keyword, "gi");
+                                    match_content = match_content.replace(regS, "<em class=\"search-keyword\">" + keyword + "</em>");
+                                });
+
+                                str += "<p class=\"search-result\">" + match_content + "...</p>"
+                            }
+                            str += "</li>";
+                        }
+                    });
+                    str += "</ul>";
+                    $resultContent.innerHTML = str;
+                });
+            }
+        });
+    };
+
+    searchFunc('/search.xml', 'searchInput', 'searchResult');
+});
+</script>
+
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="/libs/materialize/materialize.min.js"></script>
+    <script src="/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="/libs/aos/aos.js"></script>
+    <script src="/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="/js/matery.js"></script>
+
+    <!-- Baidu Analytics -->
+
+    <!-- Baidu Push -->
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+    
+    
+    <script async src="/libs/others/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+    
+
+    <!--腾讯兔小巢-->
+    
+    
+
+    
+
+    
+    <script type="text/javascript" src="/libs/background/ribbon-dynamic.js" async="async"></script>
+    
+
+    
+    <script src="/libs/instantpage/instantpage.js" type="module"></script>
+    
+
+</body>
+
+</html>

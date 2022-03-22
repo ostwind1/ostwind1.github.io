@@ -1,0 +1,1283 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="Redis源码之SDS, 编程,PHP">
+    <meta name="description" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <title>Redis源码之SDS | 朱林的博客</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+
+    <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
+    <link rel="stylesheet" type="text/css" href="/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="/css/my.css">
+
+    <script src="/libs/jquery/jquery.min.js"></script>
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="/medias/logo.png" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">朱林的博客</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>首页</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>标签</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>分类</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>归档</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>关于</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/contact" class="waves-effect waves-light">
+      
+      <i class="fas fa-comments" style="zoom: 0.6;"></i>
+      
+      <span>留言板</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/friends" class="waves-effect waves-light">
+      
+      <i class="fas fa-address-book" style="zoom: 0.6;"></i>
+      
+      <span>友情链接</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="搜索" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/medias/logo.png" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">朱林的博客</div>
+        <div class="logo-desc">
+            
+            Never really desperate, only the lost of the soul.
+            
+        </div>
+    </div>
+
+    
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			首页
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			标签
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			分类
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			归档
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			关于
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/contact" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-comments"></i>
+			
+			留言板
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/friends" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-address-book"></i>
+			
+			友情链接
+		</a>
+          
+        </li>
+        
+        
+    </ul>
+</div>
+
+
+        </div>
+
+        
+    </nav>
+
+</header>
+
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/5.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">Redis源码之SDS</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <link rel="stylesheet" href="/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        width: 345px;
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        padding: 35px 0 15px 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content {
+        padding-bottom: 30px;
+        overflow: auto;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+
+        position: absolute;
+        right: 23.5vw;
+        display: block;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 15px;
+        bottom: 76px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/Redis/">
+                                <span class="chip bg-color">Redis</span>
+                            </a>
+                        
+                            <a href="/tags/source-code/">
+                                <span class="chip bg-color">源码</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fas fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/Redis/" class="post-category">
+                                Redis
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
+                    2021-03-17
+                </div>
+                
+
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
+                    2021-03-17
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
+                    3.7k
+                </div>
+                
+
+                
+                <div class="info-break-policy">
+                    <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
+                    14 分
+                </div>
+                
+
+                
+                    <div id="busuanzi_container_page_pv" class="info-break-policy">
+                        <i class="far fa-eye fa-fw"></i>阅读次数:&nbsp;&nbsp;
+                        <span id="busuanzi_value_page_pv"></span>
+                    </div>
+				
+            </div>
+        </div>
+        <hr class="clearfix">
+
+        
+        <!-- 是否加载使用自带的 prismjs. -->
+        <link rel="stylesheet" href="/libs/prism/prism.css">
+        
+
+        
+
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <h2 id="写在之前"><a href="#写在之前" class="headerlink" title="写在之前"></a>写在之前</h2><p>本文中大量图片及内容引用自陈雷老师和他的团队所著的《Redis5设计与源码分析》以及 黄健宏老师所著的《Redis设计与实现》。</p>
+<h2 id="我们为什么要学习Redis底层源码"><a href="#我们为什么要学习Redis底层源码" class="headerlink" title="我们为什么要学习Redis底层源码"></a>我们为什么要学习Redis底层源码</h2><ol>
+<li>对技术的卓越追求：每一个程序员都应该对技术有所追求，每天单纯的只写业务代码难以提高自身技术深度。通过阅读源码可以大大提高我们自身的技术深度。</li>
+<li>更加熟练的运用工具：无论是语言还是数据库都是我们生产的工具，通过阅读源码了解原理，可以做到知其然，更知其所以然。更加熟练的实用工具。</li>
+<li>提升代码水平：Redis的设计非常的精妙，如各种数据结构的设计，以及网络模型实现等。通过学习他的代码思想，能给我们程序的编写带来很大的帮助。</li>
+<li>解开计算机运行的神秘面纱：大多数开源软件的源码都是由C一类基础的语言来实现的，其中必定涉及了大量对内存和系统调度等的操作。<blockquote>
+<p>Redis 的设计非常简洁、优美、精巧和高效， 任何人只要愿意去阅读它的代码的话， 应该都会有所收获的。    –黄健宏（huangz)  2014.7.28</p>
+</blockquote>
+</li>
+</ol>
+<h2 id="SDS是什么"><a href="#SDS是什么" class="headerlink" title="SDS是什么"></a>SDS是什么</h2><blockquote>
+<p>SDS是简单动态字符串（simple dynamic string）的缩写，Redis使用SDS来存储有可能发生改变的字符串（如：各种类型数据的“键”，字符串类型的值，list中的各个元素的值等等）</p>
+</blockquote>
+<ul>
+<li>如：当我们执行 <code>set msg &quot;hello world&quot;</code> Redis会为我们创建两个字符串对象，分别是保存着<code>msg</code> 和 <code>hello world</code> 的SDS。</li>
+<li>又比如：<code>lpush goods_list &quot;SN001&quot; &quot;SN002&quot; &quot;SN003&quot;</code>Redis将会创建一个键为<code>goods_list</code>，值为一个 <code>列表对象</code> 的键值对：键是一个保存着 <code>goods_list</code>的SDS，列表对象中包含着三个字符串对象，分别由三个SDS实现。<blockquote>
+<p>除了用来保存数据库中的字符串值之外，SDS还被用作缓冲区（buffer）：AOF模块中的AOF缓冲区，以及客户端状态中的输入缓冲区 –黄健宏 著. Redis设计与实现 </p>
+</blockquote>
+</li>
+</ul>
+<h2 id="SDS的构造以及与C字符串的区别（结合Redis3源码讲解）"><a href="#SDS的构造以及与C字符串的区别（结合Redis3源码讲解）" class="headerlink" title="SDS的构造以及与C字符串的区别（结合Redis3源码讲解）"></a>SDS的构造以及与C字符串的区别（结合Redis3源码讲解）</h2><p>SDS 相关代码在 sds.h 与 sds.c 中</p>
+<h3 id="Redis3中SDS的构造"><a href="#Redis3中SDS的构造" class="headerlink" title="Redis3中SDS的构造"></a>Redis3中SDS的构造</h3><ol>
+<li>代码实现（代码位于sds.h/sdshdr）<pre class="line-numbers language-none"><code class="language-none">&#x2F;*
+ * 保存字符串对象的结构
+ *&#x2F;
+struct sdshdr &#123;
+    
+    &#x2F;&#x2F; buf 中已占用空间的长度
+    int len;
+
+    &#x2F;&#x2F; buf 中剩余可用空间的长度
+    int free;
+
+    &#x2F;&#x2F; 数据空间
+    char buf[];
+&#125;;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<blockquote>
+<p>柔性数组：柔性数组成员（flexible array member），也叫伸缩性数组成员，只能被放在结构体的末尾。包含柔性数组成员的结构体，通过malloc函数为柔性数组动态分配内存。<br>柔性数组的地址和结构体是连续的。由于这个特性可以很方便的通过偏移柔型数组的首地址来找到结构体中的其余变量。</p>
+</blockquote>
+</li>
+<li>SDS结构<br><img src="sds-struct.png" alt="sds结构"></li>
+</ol>
+<p><em>len、free、和buf是相连的</em><br>3. SDS 示例<br><img src="sds-ex1.png" alt="SDS示例1"><br>可以看到，SDS遵循C字符串以空字符结尾的惯例，保存空字符的1字节空间不计算在SDS的len属性里面。这样做的好处是可以重用C中字符串函数。<br><img src="sds-ex2.png" alt="SDS示例1"><br>这个SDS同样保存了字符串<code>Redis</code> 但是为SDS额外分配了5字节的空间，所以free=5</p>
+<h3 id="与C字符串的比较："><a href="#与C字符串的比较：" class="headerlink" title="与C字符串的比较："></a>与C字符串的比较：</h3><ol>
+<li>常数复杂度获取长度<ul>
+<li>因为C字符串并不记录自身的长度信息，所以为了获取一个C字符串的长度，程序必须遍历整个字符串，对遇到的每个字符进行计数，直到遇到代表字符串结尾的空字符（’\0’）为止，这个操作的复杂度为O（N）。</li>
+<li>而SDS只需要访问len属性即可得到字符串长度<pre class="line-numbers language-none"><code class="language-none">&#x2F;*
+* 返回 sds 实际保存的字符串的长度
+*
+* T &#x3D; O(1)
+*&#x2F;
+static inline size_t sdslen(const sds s) &#123;
+    struct sdshdr *sh &#x3D; (void*)(s-(sizeof(struct sdshdr)));
+    return sh-&gt;len;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
+</ul>
+</li>
+<li>避免缓冲区溢出<ul>
+<li>对C语言的字符串进行拼接操作时，如果拼接后的字符串长度超出字符串容量，那么会改变字符数组之外的内容。</li>
+<li>而SDS API会在修改前对buf的大小进行判断（根据free）如果空间不足会先拓展空间，再执行拼接。</li>
+</ul>
+</li>
+<li>减少了修改字符串时的内存分配次数<ol>
+<li>空间预分配<blockquote>
+<p>空间预分配用于优化SDS的字符串增长操作：当SDS的API对一个SDS进行修改，并且需要对SDS进行空间扩展的时候，程序不仅会为SDS分配修改所必须要的空间，还会为SDS分配额外的未使用空间。</p>
+</blockquote>
+</li>
+</ol>
+<ul>
+<li>redis3.0的分配策略： 如果修改后的长度小于1MB将会额外分配和len属性相同长度的空间；如果大于1MB将会额外分配1MB空间<blockquote>
+<p>通过这种预分配策略，SDS将连续增长N次字符串所需的内存重分配次数从必定N次降低为最多N次。</p>
+</blockquote>
+</li>
+</ul>
+<ol start="2">
+<li>惰性空间释放<br>当SDS中存储的字符串长度缩短时，将回收多余的空间，而是使用free记录下来，以备下次使用<blockquote>
+<p>通过惰性空间释放策略，SDS避免了缩短字符串时所需的内存重分配操作，并为将来可能有的增长操作提供了优化。</p>
+</blockquote>
+</li>
+</ol>
+</li>
+<li>二进制安全</li>
+</ol>
+<ul>
+<li>C 语言字符串会将空字符 ‘\n’ 认为是字符串的结束，如果向字符串中存储  <code>char* s = &quot;hello \0 whorld!&quot;</code>那么最终 s 的值仅为“hello” 会抛弃掉’\0’之后的部分，因此只能存储文本不能保存图片音视频等二进制数据。</li>
+<li>而SDS使用 len 来判断字符串的长度 而不是根据 ‘\0’来判断字符串是否结束。<blockquote>
+<p>SDS的API都是二进制安全的（binarysafe），所有SDS API都会以处理二进制的方式来处理SDS存放在buf数组里的数据</p>
+</blockquote>
+</li>
+</ul>
+<h3 id="SDS和C字符串差异对照"><a href="#SDS和C字符串差异对照" class="headerlink" title="SDS和C字符串差异对照"></a>SDS和C字符串差异对照</h3><table>
+<thead>
+<tr>
+<th align="center">c字符串</th>
+<th align="center">SDS</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">获取字符串长度的复杂度为O(N)</td>
+<td align="center">获取字符串长度的复杂度为O(1)</td>
+</tr>
+<tr>
+<td align="center">API是不安全的，可能会造成缓冲区溢出</td>
+<td align="center">API是安全的不会造成缓冲区溢出</td>
+</tr>
+<tr>
+<td align="center">修改字符串长度N次必然需要进行N次长度分配</td>
+<td align="center">修改字符串长度N次最多需要进行N次内存重新分配</td>
+</tr>
+<tr>
+<td align="center">只能保存文本数据</td>
+<td align="center">可以保存文本或者二进制数据</td>
+</tr>
+<tr>
+<td align="center">可以使用所有&lt;string.h&gt;库中的函数</td>
+<td align="center">可以使用一部分&lt;string.h&gt;库中的函数</td>
+</tr>
+</tbody></table>
+<h2 id="Redis5对SDS的优化"><a href="#Redis5对SDS的优化" class="headerlink" title="Redis5对SDS的优化"></a>Redis5对SDS的优化</h2><ol>
+<li>原来的SDS存在的问题<ul>
+<li>头部占用空间太大，即使存储1字节长度的字符也需要 4(int len) + 4(int free) + 1(字符串内容) 的空间，大多数情况下都用不到4个字节的空间来存储长度</li>
+</ul>
+</li>
+<li>Redis5对SDS的优化<ul>
+<li>Redis5 将字符串根据长度区分为 5 种，分别为</li>
+</ul>
+</li>
+</ol>
+<pre class="line-numbers language-none"><code class="language-none">#define SDS_TYPE_5  0  &#x2F;&#x2F; 用5位就可以存储长度， 最大长度为 2^5 - 1
+#define SDS_TYPE_8  1  &#x2F;&#x2F; 最大长度为2^8 - 1
+#define SDS_TYPE_16 2  &#x2F;&#x2F; 最大长度为2^16 - 1
+#define SDS_TYPE_32 3  &#x2F;&#x2F; 最大长度为2^32 - 1
+#define SDS_TYPE_64 4  &#x2F;&#x2F; 最大长度为2^64 - 1<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<ol>
+<li>对于长度小于32的短字符串，5 位即可将长度存储，再用 3 位来存储字符串类型（0，1，2，3，4）。这样只需要使用1个字节就可以存储这两个内容：</li>
+</ol>
+<pre class="line-numbers language-none"><code class="language-none">struct __attribute__ ((__packed__))sdshdr5 &#123;
+  unsigned char flags; &#x2F;* 低3位存储类型, 高5位存储长度 *&#x2F;
+  char buf[];&#x2F;*柔性数组, 存放实际内容*&#x2F;
+&#125;;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>结构如下图<br><img src="sdshdr5.png" alt="SDSHDR5"><br>sdshdr5结构中，flags占1个字节，其低3位（bit）表示type，高5位（bit）表示长度，能表示的长度区间为0～31（2^5-1），flags后面就是字符串的内容。<br>2. 对于长度大于31的字符串将len 和 free 单独存放。 sdshdr8,sdshdr16,sdshdr32,sdshdr64的结构相同，sdshdr16的结构如下所示<br><img src="sdshdr16.png" alt="SDSHDR16"><br>1）len：表示buf中已占用字节数。<br>2）alloc：表示buf中已分配字节数，不同于free，记录的是为buf分配的总长度。<br>3）flags：标识当前结构体的类型，低3位用作标识位，高5位预留。<br>4）buf：柔性数组，真正存储字符串的数据空间。</p>
+<p>在Redis 5.0中，sdshdr8、sdshdr16、sdshdr32和sdshdr64的数据结构如下：   </p>
+<pre class="line-numbers language-none"><code class="language-none">struct __attribute__((__packed__))sdshdr8 &#123;
+  uint8_t len; &#x2F;* 已使用长度, 用1字节存储 *&#x2F;
+  uint8_t alloc; &#x2F;* 总长度, 用1字节存储*&#x2F;
+  unsigned char flags; &#x2F;* 低3位存储类型, 高5位预留 *&#x2F;
+  char buf[];&#x2F;*柔性数组, 存放实际内容*&#x2F;
+&#125;;
+struct __attribute__((__packed__))sdshdr16 &#123;
+  uint16_t len; &#x2F;*已使用长度, 用2字节存储*&#x2F;
+  uint16_t alloc; &#x2F;* 总长度, 用2字节存储*&#x2F;
+  unsigned char flags; &#x2F;* 低3位存储类型, 高5位预留 *&#x2F;
+  char buf[];&#x2F;*柔性数组, 存放实际内容*&#x2F;
+&#125;;
+struct __attribute__((__packed__))sdshdr32 &#123;
+  uint32_t len; &#x2F;*已使用长度, 用4字节存储*&#x2F;
+  uint32_t alloc; &#x2F;* 总长度, 用4字节存储*&#x2F;
+  unsigned char flags;&#x2F;* 低3位存储类型, 高5位预留 *&#x2F;
+  char buf[];&#x2F;*柔性数组, 存放实际内容*&#x2F;
+&#125;;
+struct __attribute__((__packed__))sdshdr64 &#123;
+  uint64_t len; &#x2F;*已使用长度, 用8字节存储*&#x2F;
+  uint64_t alloc; &#x2F;* 总长度, 用8字节存储*&#x2F;
+  unsigned char flags; &#x2F;* 低3位存储类型, 高5位预留 *&#x2F;
+  char buf[];&#x2F;*柔性数组, 存放实际内容*&#x2F;
+&#125;;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<blockquote>
+<p><em>一般情况下，结构体会按其所有变量大小的最小公倍数做字节对齐，而用packed修饰后，结构体则变为按1字节对齐</em></p>
+</blockquote>
+<p><img src="packed.png" alt="packed修饰"><br>这样做一方面节省了空间，另一方面保证了柔性数组紧跟在flags之后，可以通过偏移柔性数组指针来找到</p>
+<h2 id="SDS操作API（部分）"><a href="#SDS操作API（部分）" class="headerlink" title="SDS操作API（部分）"></a>SDS操作API（部分）</h2><h3 id="新建"><a href="#新建" class="headerlink" title="新建"></a>新建</h3><pre class="line-numbers language-none"><code class="language-none">sds sdsnewlen(const void *init, size_t initlen) &#123;
+    void *sh;
+    sds s;
+    char type &#x3D; sdsReqType(initlen);&#x2F;&#x2F;根据字符串长度选择不同的类型
+    if (type &#x3D;&#x3D; SDS_TYPE_5 &amp;&amp; initlen &#x3D;&#x3D; 0) type &#x3D; SDS_TYPE_8;&#x2F;&#x2F;SDS_TYPE_5强制转化为SDS_TYPE_8
+    int hdrlen &#x3D; sdsHdrSize(type);&#x2F;&#x2F;计算不同头部所需的长度
+    unsigned char *fp; &#x2F;* 指向flags的指针 *&#x2F;
+    sh &#x3D; s_malloc(hdrlen+initlen+1);&#x2F;&#x2F;&quot;+1&quot;是为了结束符&#39;\0&#39;
+    ...
+    s &#x3D; (char*)sh+hdrlen;&#x2F;&#x2F;s是指向buf的指针
+    fp &#x3D; ((unsigned char*)s)-1;&#x2F;&#x2F;s是柔性数组buf的指针,-1即指向flags
+    ...
+    s[initlen] &#x3D; &#39;\0&#39;;&#x2F;&#x2F;添加末尾的结束符
+    return s;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<blockquote>
+<p>Redis 3.2后的SDS结构由1种增至5种，且对于sdshdr5类型，在创建<code>空字符串</code>时会强制转换为sdshdr8。原因可能是创建空字符串后，其内容可能会频繁更新而引发扩容，故创建时直接创建为sdshdr8。<br>从源码中我们可以看到，其实s就是一个字符数组的指针，即结构中的buf。这样设计的好处在于直接对上层提供了字符串内容指针，兼容了部分C函数，且通过偏移能迅速定位到SDS结构体的各处成员变量。</p>
+</blockquote>
+<h3 id="释放"><a href="#释放" class="headerlink" title="释放"></a>释放</h3><ul>
+<li>真正释放内存：这种方法通过移动<code>s</code>将指针定位到SDS首部，然后使用s_free将内存释放<pre class="line-numbers language-none"><code class="language-none">void sdsfree(sds s) &#123;
+  if (s &#x3D;&#x3D; NULL) return;
+  s_free((char*)s-sdsHdrSize(s[-1]));&#x2F;&#x2F;此处直接释放内存
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre></li>
+<li>重置值而不释放内存：此方法可以将SDS的len归零，但不释放内存，新的数据可以覆盖写入到buf中，减少了申请内存的开销。<pre class="line-numbers language-none"><code class="language-none">void sdsclear(sds s) &#123;
+  sdssetlen(s, 0); &#x2F;&#x2F;统计值len归零
+  s[0] &#x3D; &#39;\0&#39;;&#x2F;&#x2F;清空buf
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="拼接"><a href="#拼接" class="headerlink" title="拼接"></a>拼接</h3>拼接操作可以通过调用<code>sdscatsds</code>方法来完成，<code>sdscatsds</code>是暴露给上层的方法，在方法中调用了<code>sdscatlen</code>来完成对字符串的拼接。<br>因为拼接后的字符串长度有可能大于当前SDS类型的容量，所以在<code>sdscatlen</code>方法中调用了<code>sdsMakeRoomFor</code>来判断是否需要扩容，如果不需要扩容就返回原来的字符串，如果需要扩容就返回扩容好的新字符串* 。<br>SDS的扩容策略：</li>
+</ul>
+<ol>
+<li>若sds中剩余空闲长度大于新增内容的长度addlen，直接在柔性数组buf末尾追加即可，无须扩容。</li>
+<li>若sds中剩余空闲长度avail小于或等于新增内容的长度addlen，则分情况讨论：新增后总长度len+addlen&lt;1MB的，按新长度的2倍扩容；新增后总长度len+addlen&gt;1MB的，按新长度加上1MB扩容。<pre class="line-numbers language-none"><code class="language-none">sds sdscatsds(sds s, const sds t) &#123;
+  return sdscatlen(s, t, sdslen(t));
+&#125;
+
+&#x2F;* 这是一个二进制安全的方法，功能是将指针t的内容和指针s的内容拼接在一起*&#x2F;
+sds sdscatlen(sds s, const void *t, size_t len) &#123;
+  size_t curlen &#x3D; sdslen(s);
+  s &#x3D; sdsMakeRoomFor(s,len); &#x2F;&#x2F;这里进行了扩容的判断操作
+  if (s &#x3D;&#x3D; NULL) return NULL;
+  memcpy(s+curlen, t, len);&#x2F;&#x2F;直接拼接, 保证了二进制安全
+  sdssetlen(s, curlen+len);
+  s[curlen+len] &#x3D; &#39;\0&#39;;&#x2F;&#x2F;加上结束符
+  return s;
+&#125;
+
+&#x2F;*判断sds是否需要扩容，如果不需要扩容就返回原来的字符串，如果需要扩容就返回扩容好的新字符串*&#x2F;
+sds sdsMakeRoomFor(sds s, size_t addlen) &#123;
+    void *sh, *newsh;
+    size_t avail &#x3D; sdsavail(s);&#x2F;&#x2F;此处返回的是SDS中剩余空闲长度
+    size_t len, newlen;
+    char type, oldtype &#x3D; s[-1] &amp; SDS_TYPE_MASK;  &#x2F;&#x2F;这里的 取得的是 SDS的类型 SDS_TYPE_MASK &#x3D; 7 &#x3D;&gt; 00000111
+    int hdrlen;
+
+    &#x2F;* Return ASAP if there is enough space left. *&#x2F;
+    if (avail &gt;&#x3D; addlen) return s;
+
+    len &#x3D; sdslen(s);
+    sh &#x3D; (char*)s-sdsHdrSize(oldtype);
+    newlen &#x3D; (len+addlen);
+    if (newlen &lt; SDS_MAX_PREALLOC)
+        newlen *&#x3D; 2;
+    else
+        newlen +&#x3D; SDS_MAX_PREALLOC;
+
+    type &#x3D; sdsReqType(newlen);
+
+    &#x2F;* Don&#39;t use type 5: the user is appending to the string and type 5 is
+     * not able to remember empty space, so sdsMakeRoomFor() must be called
+     * at every appending operation. *&#x2F;
+    if (type &#x3D;&#x3D; SDS_TYPE_5) type &#x3D; SDS_TYPE_8;
+
+    hdrlen &#x3D; sdsHdrSize(type);
+    if (oldtype&#x3D;&#x3D;type) &#123;
+        newsh &#x3D; s_realloc(sh, hdrlen+newlen+1);
+        if (newsh &#x3D;&#x3D; NULL) return NULL;
+        s &#x3D; (char*)newsh+hdrlen;
+    &#125; else &#123;
+        &#x2F;* Since the header size changes, need to move the string forward,
+         * and can&#39;t use realloc *&#x2F;
+        newsh &#x3D; s_malloc(hdrlen+newlen+1);
+        if (newsh &#x3D;&#x3D; NULL) return NULL;
+        memcpy((char*)newsh+hdrlen, s, len+1);
+        s_free(sh);
+        s &#x3D; (char*)newsh+hdrlen;
+        s[-1] &#x3D; type;
+        sdssetlen(s, len);
+    &#125;
+    sdssetalloc(s, newlen);
+    return s;
+&#125;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></li>
+</ol>
+
+                
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        文章作者:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="/about" rel="external nofollow noreferrer">朱林</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        文章链接:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="https://ostwind1.guthub.io.com/2021/03/17/redis/redis-yuan-ma-zhi-sds/">https://ostwind1.guthub.io.com/2021/03/17/redis/redis-yuan-ma-zhi-sds/</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        版权声明:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    本博客所有文章除特別声明外，均采用
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    许可协议。转载请注明来源
+                    <a href="/about" target="_blank">朱林</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>复制成功，请遵循本文的转载规则</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">查看</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/Redis/">
+                                    <span class="chip bg-color">Redis</span>
+                                </a>
+                            
+                                <a href="/tags/source-code/">
+                                    <span class="chip bg-color">源码</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+<div id="article-share">
+
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+            <div class="card">
+                <a href="/2021/03/21/zui-jia-shi-jian/tong-guo-nginx-shi-xian-zhu-bu-shang-xian-chong-gou-xi-tong/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/20.jpg" class="responsive-img" alt="通过nginx实现逐步上线重构系统">
+                        
+                        <span class="card-title">通过nginx实现逐步上线重构系统</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            nginx能力小实践
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2021-03-21
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/" class="post-category">
+                                    最佳实践
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/%E5%B7%A5%E7%A8%8B%E5%AE%9E%E8%B7%B5/">
+                        <span class="chip bg-color">工程实践</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2021/03/15/laravel/laravel-shi-jian-qian-xi/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/15.jpg" class="responsive-img" alt="Laravel事件浅析">
+                        
+                        <span class="card-title">Laravel事件浅析</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            解析Laravel中是如何实现观察者模式的
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-03-15
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/Laravel/" class="post-category">
+                                    Laravel
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Laravel/">
+                        <span class="chip bg-color">Laravel</span>
+                    </a>
+                    
+                    <a href="/tags/PHP/">
+                        <span class="chip bg-color">PHP</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeShrink.js"></script>
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget card" style="background-color: white;">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;目录</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('0'),
+            headingSelector: 'h2, h3, h4'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h2, h3, h4').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+
+
+    <footer class="page-footer bg-color">
+    
+    <div class="container row center-align" style="margin-bottom: 0px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            
+                <span id="year">2019-2022</span>
+            
+            <span id="year">2019</span>
+            <a href="/about" target="_blank">朱林</a>
+            |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
+            |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
+            <br>
+            
+            &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
+                class="white-color">12k</span>&nbsp;字
+            
+            
+            
+            
+            
+            
+            <span id="busuanzi_container_site_pv">
+                |&nbsp;<i class="far fa-eye"></i>&nbsp;总访问量:&nbsp;<span id="busuanzi_value_site_pv"
+                    class="white-color"></span>&nbsp;次
+            </span>
+            
+            
+            <span id="busuanzi_container_site_uv">
+                |&nbsp;<i class="fas fa-users"></i>&nbsp;总访问人数:&nbsp;<span id="busuanzi_value_site_uv"
+                    class="white-color"></span>&nbsp;人
+            </span>
+            
+            <br>
+            
+            <br>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/ostwind1" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+    <a href="mailto:241807188@qq.com" class="tooltipped" target="_blank" data-tooltip="邮件联系我" data-position="top" data-delay="50">
+        <i class="fas fa-envelope-open"></i>
+    </a>
+
+
+
+
+
+
+
+    <a href="tencent://AddContact/?fromId=50&fromSubId=1&subcmd=all&uin=2418071885" class="tooltipped" target="_blank" data-tooltip="QQ联系我: 2418071885" data-position="top" data-delay="50">
+        <i class="fab fa-qq"></i>
+    </a>
+
+
+
+
+
+
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;搜索</span>
+            <input type="search" id="searchInput" name="s" placeholder="请输入搜索的关键字"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+$(function () {
+    var searchFunc = function (path, search_id, content_id) {
+        'use strict';
+        $.ajax({
+            url: path,
+            dataType: "xml",
+            success: function (xmlResponse) {
+                // get the contents from search data
+                var datas = $("entry", xmlResponse).map(function () {
+                    return {
+                        title: $("title", this).text(),
+                        content: $("content", this).text(),
+                        url: $("url", this).text()
+                    };
+                }).get();
+                var $input = document.getElementById(search_id);
+                var $resultContent = document.getElementById(content_id);
+                $input.addEventListener('input', function () {
+                    var str = '<ul class=\"search-result-list\">';
+                    var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                    $resultContent.innerHTML = "";
+                    if (this.value.trim().length <= 0) {
+                        return;
+                    }
+                    // perform local searching
+                    datas.forEach(function (data) {
+                        var isMatch = true;
+                        var data_title = data.title.trim().toLowerCase();
+                        var data_content = data.content.trim().replace(/<[^>]+>/g, "").toLowerCase();
+                        var data_url = data.url;
+                        data_url = data_url.indexOf('/') === 0 ? data.url : '/' + data_url;
+                        var index_title = -1;
+                        var index_content = -1;
+                        var first_occur = -1;
+                        // only match artiles with not empty titles and contents
+                        if (data_title !== '' && data_content !== '') {
+                            keywords.forEach(function (keyword, i) {
+                                index_title = data_title.indexOf(keyword);
+                                index_content = data_content.indexOf(keyword);
+                                if (index_title < 0 && index_content < 0) {
+                                    isMatch = false;
+                                } else {
+                                    if (index_content < 0) {
+                                        index_content = 0;
+                                    }
+                                    if (i === 0) {
+                                        first_occur = index_content;
+                                    }
+                                }
+                            });
+                        }
+                        // show search results
+                        if (isMatch) {
+                            str += "<li><a href='" + data_url + "' class='search-result-title'>" + data_title + "</a>";
+                            var content = data.content.trim().replace(/<[^>]+>/g, "");
+                            if (first_occur >= 0) {
+                                // cut out 100 characters
+                                var start = first_occur - 20;
+                                var end = first_occur + 80;
+                                if (start < 0) {
+                                    start = 0;
+                                }
+                                if (start === 0) {
+                                    end = 100;
+                                }
+                                if (end > content.length) {
+                                    end = content.length;
+                                }
+                                var match_content = content.substr(start, end);
+                                // highlight all keywords
+                                keywords.forEach(function (keyword) {
+                                    var regS = new RegExp(keyword, "gi");
+                                    match_content = match_content.replace(regS, "<em class=\"search-keyword\">" + keyword + "</em>");
+                                });
+
+                                str += "<p class=\"search-result\">" + match_content + "...</p>"
+                            }
+                            str += "</li>";
+                        }
+                    });
+                    str += "</ul>";
+                    $resultContent.innerHTML = str;
+                });
+            }
+        });
+    };
+
+    searchFunc('/search.xml', 'searchInput', 'searchResult');
+});
+</script>
+
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="/libs/materialize/materialize.min.js"></script>
+    <script src="/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="/libs/aos/aos.js"></script>
+    <script src="/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="/js/matery.js"></script>
+
+    <!-- Baidu Analytics -->
+
+    <!-- Baidu Push -->
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+    
+    
+    <script async src="/libs/others/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+    
+
+    <!--腾讯兔小巢-->
+    
+    
+
+    
+
+    
+    <script type="text/javascript" src="/libs/background/ribbon-dynamic.js" async="async"></script>
+    
+
+    
+    <script src="/libs/instantpage/instantpage.js" type="module"></script>
+    
+
+</body>
+
+</html>
