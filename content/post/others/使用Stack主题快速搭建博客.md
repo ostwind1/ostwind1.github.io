@@ -278,7 +278,34 @@ hugo new content post/others/使用Stack主题快速搭建博客.md
 
 Hugo 会使用主题自带的文章模板，在 `content/post/others/` 下生成 Markdown 文件。写完内容后把 front matter 里的 `draft` 改成 `false`，再提交推送即可。
 
-# 7. 参考链接
+# 7. 评论
+1. 进入配置文件修改评论`config/_default/params.toml`修改评论配置，设置`provider = "giscus"`
+2. 前往Github仓库设置开启 Discussions `Settings → General → Features`
+3. 前往[Giscus GitHub App](https://github.com/apps/giscus?utm_source=chatgpt.com)，安装Giscus App到博客仓库
+4. 前往[Giscus 官方配置页面](https://giscus.app/zh-CN?utm_source=chatgpt.com)生成 Giscus 配置
+    a. 仓库配置为你的博客仓库，例如 `ostwind1/ostwind1.github.io`
+    b. `Discussion 分类`配置为 `General`
+    c. 特性启用启用主帖子上的反应（reaction）、将评论框放在评论上方、懒加载评论、
+5. 在启用giscus部分获取生成的js配置脚本，将生成的配置项转写为Stack的配置格式，将配置写入`config/_default/params.toml`
+```
+[comments.giscus]
+    repo             = "ostwind1/ostwind1.github.io"
+    repoID           = "R_kgDOV1W_IA"
+    category          = "General"
+    categoryID       = "DIC_kwDOV1W_IM4DLwxf"
+    mapping           = "pathname"
+    lightTheme        = "light"
+    darkTheme         = "dark_dimmed"
+    reactionsEnabled  = 1
+    emitMetadata      = 0
+    inputPosition     = "top"
+    lang              = "zh-CN"
+    strict            = 0
+    loading            = "lazy"
+```
+
+
+# 8. 参考链接
 
 - Stack 主题仓库：<https://github.com/CaiJimmy/hugo-theme-stack>
 - Stack 模板仓库：<https://github.com/CaiJimmy/hugo-theme-stack-starter>
