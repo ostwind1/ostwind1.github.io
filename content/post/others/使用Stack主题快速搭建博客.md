@@ -3,7 +3,7 @@ title: "使用Stack主题快速搭建博客"
 description: "记录从 CaiJimmy/hugo-theme-stack-starter 模板初始化仓库到修改配置的完整过程，并解释我实际改动过的每一项配置。"
 date: 2026-11-21T14:49:48+08:00
 lastmod: 2026-11-21T15:10:00+08:00
-image: 
+image: "/img/cover-03.jpg"
 math: false
 license: 
 comments: true

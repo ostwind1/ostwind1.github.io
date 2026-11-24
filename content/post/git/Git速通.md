@@ -4,7 +4,7 @@ description:
 date: 2026-11-23T12:30:39+08:00
 tags: ["Git命令", "版本控制", "变基"]
 categories: ["Git"]
-image: 
+image: "/img/cover-01.jpg"
 math: 
 license: 
 comments: true
