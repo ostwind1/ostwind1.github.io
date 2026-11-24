@@ -3,8 +3,10 @@ title: "{{ replace .Name "-" " " | title }}"
 date: {{ .Date }}
 draft: true
 description: ""
-tags: []
-categories: []
+tags:
+ - ""
+categories:
+ - ""
 comments: true
 image: 
 math: 
