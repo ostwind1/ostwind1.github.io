@@ -88,8 +88,8 @@ git rm --cached test.txt
 
 覆盖最近一次提交，常用于修正提交信息或补充遗漏的文件。
 
-1. **修改提交信息**：
-2. **增加提交文件，不修改 commit 信息**：
+1. **修改提交信息**：`git commit --amend -m "xxxxx"`
+2. **增加提交文件，不修改 commit 信息**：`git add xx ; git commit --amend --no-edit `
 
 ## 8. 撤销与回退操作
 
